@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/smokey-dreamz/static/css/main.913f451b.css",
+    "main.js": "/smokey-dreamz/static/js/main.fd8f3249.js",
+    "static/js/453.d0e0617d.chunk.js": "/smokey-dreamz/static/js/453.d0e0617d.chunk.js",
+    "static/media/smokey-dreamz-hero-img.webP": "/smokey-dreamz/static/media/smokey-dreamz-hero-img.e2acc7926670338a50a3.webP",
+    "static/media/dev-doc-logo.svg": "/smokey-dreamz/static/media/dev-doc-logo.de797792e2f0976ba27c3a47cbad631e.svg",
+    "index.html": "/smokey-dreamz/index.html",
+    "main.913f451b.css.map": "/smokey-dreamz/static/css/main.913f451b.css.map",
+    "main.fd8f3249.js.map": "/smokey-dreamz/static/js/main.fd8f3249.js.map",
+    "453.d0e0617d.chunk.js.map": "/smokey-dreamz/static/js/453.d0e0617d.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.913f451b.css",
+    "static/js/main.fd8f3249.js"
+  ]
+}
