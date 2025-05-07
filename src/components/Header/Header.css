@@ -13,15 +13,17 @@
 .header__container {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   height: 5rem;
-  padding: 0 var(--spacing-xl);
   width: 100%;
   max-width: 1920px;
   margin: 0 auto;
+  padding: 0 var(--spacing-md);
+  box-sizing: border-box;
 }
 
 .header__logo h1 {
-  font-size: var(--text-2xl);
+  font-size: clamp(1.25rem, 4vw, var(--text-2xl));
   font-weight: 700;
   letter-spacing: 2px;
   color: var(--color-white);
@@ -29,7 +31,7 @@
 }
 
 .header__menu-btn {
-  display: flex;
+  display: none; 
   flex-direction: column;
   gap: 6px;
   width: 30px;
@@ -44,8 +46,21 @@
 .header__menu-btn span {
   width: 100%;
   height: 2px;
-  background: var(--color-gray-100);
-  transition: var(--transition-normal);
+  background: var(--color-white);
+  transition: all 0.3s ease;
+  transform-origin: left;
+}
+
+.header__menu-btn.active span:first-child {
+  transform: rotate(45deg);
+}
+
+.header__menu-btn.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.header__menu-btn.active span:last-child {
+  transform: rotate(-45deg);
 }
 
 .header__nav {
@@ -55,14 +70,15 @@
   width: 100%;
   height: 0;
   background: var(--overlay-primary);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
   opacity: 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--spacing-lg);
+  background: rgba(0, 0, 0, 0.95);
 }
 
 .header__nav.active {
@@ -103,19 +119,79 @@
   width: 100%;
 }
 
-@media screen and (min-width: 768px) {
+.bottom-nav-link{
+  display: none;
+}
+
+@media screen and (max-width: 767px) {
   .header__container {
-    justify-content: space-between;
-    padding: 0 var(--spacing-2xl);
+    padding: 0 var(--spacing-md);
+  }
+  
+  .header__logo h1 {
+    font-size: var(--text-lg);
   }
 
   .header__menu-btn {
-    display: none;
+    display: flex;
+  }
+
+
+  .nav-logo {
+    display: block;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: auto;
+  }
+
+  .bottom-nav-link{
+    display: block;
+    margin-top: 200px;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .header__container {
+    padding: 0 var(--spacing-lg);
+  }
+
+  .header__logo h1 {
+    font-size: var(--text-lg);
+  }
+
+  .header__nav {
+    position: static;
+    top: unset;
+    height: auto;
+    width: auto;
+    opacity: 1;
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    flex-direction: row;
+    padding: 0;
+    gap: var(--spacing-md);
+    margin-left: auto;
+  }
+
+  .nav-item {
+    font-size: var(--text-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    white-space: nowrap;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .header__container {
+    padding: 0 var(--spacing-2xl);
   }
 
   .header__nav {
     position: static;
     height: auto;
+    width: auto;
     opacity: 1;
     background: transparent;
     -webkit-backdrop-filter: none;
@@ -123,11 +199,66 @@
     flex-direction: row;
     padding: 0;
     gap: var(--spacing-xl);
+    margin-left: auto;
+  }
+
+  .nav-item {
+    font-size: var(--text-base);
+    white-space: nowrap;
   }
 }
 
 @media screen and (min-width: 1440px) {
-  .header__container {
-    padding: 0 var(--spacing-2xl);
+  
+
+  .nav-item {
+    font-size: var(--text-lg);
   }
+}
+
+.nav-logo {
+  display: none;
+}
+
+.bottom-nav-link {
+  position: relative;
+  opacity: 0.4;  
+  transition: opacity 0.3s ease;
+}
+
+.bottom-nav-link:hover {
+  opacity: 1;
+}
+
+.bottom-nav-link::before {
+  content: 'Developed by:';
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  color: var(--color-gray-100);
+  white-space: nowrap;
+  opacity: 0.3;  
+}
+
+@keyframes subtle-bounce {
+  0%, 85%, 100% {
+    transform: translateY(0);
+  }
+  20%, 50% {
+    transform: translateY(-5px);
+  }
+  35%, 65% {
+    transform: translateY(-3px);
+  }
+}
+
+.bottom-nav-link svg {
+  animation: subtle-bounce 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-play-state: paused;
+}
+
+.bottom-nav-link svg:hover {
+  animation: none;
 }

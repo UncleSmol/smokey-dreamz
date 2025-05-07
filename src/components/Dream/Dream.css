@@ -1,0 +1,229 @@
+.dream {
+  width: 100%;
+  background: var(--color-gray-900);
+  min-height: 100vh;
+  padding: var(--spacing-6xl) 0;
+}
+
+.hero-section {
+  height: 60vh;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: var(--spacing-6xl);
+}
+
+.hero__image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.hero__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero__image::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-primary-secondary);
+  opacity: 0.3;
+}
+
+.hero-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: var(--color-white);
+  padding: var(--spacing-xl);
+  position: relative;
+  z-index: 1;
+}
+
+.hero-content h1 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  margin-bottom: var(--spacing-md);
+  font-weight: 700;
+}
+
+.hero-content p {
+  font-size: var(--text-xl);
+  color: var(--color-gray-100);
+}
+
+.content-wrapper {
+  max-width: 1280px;
+  margin: var(--spacing-2xl) auto;
+  padding: 0 var(--spacing-xl);
+}
+
+.category-section {
+  margin-bottom: var(--spacing-2xl);
+}
+
+
+.category-header {
+  width: 100%;
+  background: var(--glass-primary);
+  border: 1px solid var(--color-gray-700);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: var(--transition-normal);
+}
+
+.category-header:hover {
+  border-color: var(--color-accent);
+}
+
+.category-header.active {
+  border-color: var(--color-accent);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.category-title h2 {
+  color: var(--color-white);
+  font-size: var(--text-2xl);
+  margin-bottom: var(--spacing-xs);
+}
+
+.category-title p {
+  color: var(--color-gray-300);
+  font-size: var(--text-base);
+}
+
+.chevron-icon {
+  color: var(--color-white);
+  font-size: var(--text-xl);
+  transition: transform 0.3s ease;
+}
+
+.category-header.active .chevron-icon {
+  transform: rotate(180deg);
+}
+
+.category-content {
+  height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.category-content.expanded {
+  height: auto;
+  min-height: 420px;
+  margin-top: var(--spacing-xl);
+  padding: var(--spacing-xl) 0;
+  background: transparent;
+}
+
+/* Scroll buttons */
+.scroll-buttons {
+  position: absolute;
+  top: 50%;
+  left: var(--spacing-md);
+  right: var(--spacing-md);
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.scroll-btn {
+  width: 48px;
+  height: 48px;
+  background: var(--glass-primary);
+  border: 1px solid var(--color-accent);
+  border-radius: 50%;
+  color: var(--color-white);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: var(--transition-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-xl);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.scroll-btn:hover {
+  background: var(--color-accent);
+  transform: scale(1.1);
+}
+
+.products-scroll {
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: var(--spacing-md) var(--spacing-xl);
+}
+
+/* Hide scrollbar but maintain functionality */
+.products-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.products-row {
+  display: flex;
+  gap: var(--spacing-xl);
+}
+
+/* Desktop styles */
+@media screen and (min-width: 768px) {
+  .products-row {
+    padding: 0 var(--spacing-xl);
+  }
+}
+
+/* Mobile styles */
+@media screen and (max-width: 767px) {
+  .scroll-buttons {
+    display: none; /* Only hide on mobile */
+  }
+
+  .products-scroll {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: var(--spacing-md) 0;
+  }
+
+  .products-row {
+    padding: 0 calc(50% - 140px);
+  }
+
+  .product-card {
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    min-width: 280px;
+  }
+
+  .category-content.expanded {
+    min-height: 380px;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .content-wrapper {
+    padding: var(--spacing-xl) var(--spacing-2xl);
+  }
+}

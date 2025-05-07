@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Link } from 'react-router-dom';
+import { ReactComponent as DevDocLogo } from '../../sig/dev-doc-logo.svg';
 import './Header.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -14,7 +16,7 @@ const Header = () => {
 
   const menuItems = [
     { path: '/', label: 'Home' },
-    { path: '/the-dream', label: 'The Dream' },
+    { path: '/Dream', label: 'The Dream' },
     { path: '/know-us', label: 'Know Us' },
     { path: '/connect', label: 'Connect' },
     { path: '/events', label: 'Events' },
@@ -52,11 +54,30 @@ const Header = () => {
         });
       }
     });
+
+    // Add logo bounce animation
+    const logo = document.querySelector('.bottom-nav-link svg');
+    
+    const animateLogo = () => {
+      logo.style.animationPlayState = 'running';
+      setTimeout(() => {
+        logo.style.animationPlayState = 'paused';
+      }, 2000);
+    };
+
+    // Initial animation
+    animateLogo();
+    
+    // Set interval for repeated animation
+    const intervalId = setInterval(animateLogo, 10000);
+
+    // Cleanup
+    return () => clearInterval(intervalId);
   }, []);
 
   const toggleMenu = () => {
     const nav = navRef.current;
-    const navItems = document.querySelectorAll('.nav-item');
+    const navItems = nav.querySelectorAll('.nav-item, .bottom-nav-link'); // Added logo selector
     
     if (isMenuOpen) {
       const tl = gsap.timeline({
@@ -67,17 +88,14 @@ const Header = () => {
         y: -20,
         opacity: 0,
         duration: 0.3,
-        stagger: {
-          each: 0.05,
-          from: "end"
-        }
+        stagger: 0.05
       })
       .to(nav, {
         height: 0,
         opacity: 0,
         duration: 0.4,
         ease: "power2.inOut"
-      }, ">");
+      });
     } else {
       const tl = gsap.timeline({
         onStart: () => setIsMenuOpen(true)
@@ -102,9 +120,33 @@ const Header = () => {
     }
   };
 
+  const resetNavigation = () => {
+    if (isMenuOpen) {
+      const nav = navRef.current;
+      const navItems = nav.querySelectorAll('.nav-item, .bottom-nav-link');
+      
+      const tl = gsap.timeline({
+        onComplete: () => setIsMenuOpen(false)
+      });
+
+      tl.to(navItems, {
+        y: -20,
+        opacity: 0,
+        duration: 0.3,
+        stagger: 0.05
+      })
+      .to(nav, {
+        height: 0,
+        opacity: 0,
+        duration: 0.4,
+        ease: "power2.inOut"
+      });
+    }
+  };
+
   return (
-    <header ref={headerRef} className="header">
-      <div className="container header__container">
+    <header className="header" ref={headerRef}>
+      <div className="header__container">
         <div ref={logoRef} className="header__logo">
           <h1>SMOKEY DREAMZ</h1>
         </div>
@@ -120,16 +162,26 @@ const Header = () => {
           <span></span>
         </button>
 
-        <nav ref={navRef} className={`header__nav ${isMenuOpen ? 'active' : ''}`}>
-          {menuItems.map((item, index) => (
-            <a 
-              key={index}
-              href={item.path}
+        <nav className={`header__nav ${isMenuOpen ? 'active' : ''}`} ref={navRef}>
+          {menuItems.map((item) => (
+            <Link 
+              key={item.path} 
+              to={item.path} 
               className="nav-item"
+              onClick={resetNavigation}
             >
               {item.label}
-            </a>
+            </Link>
           ))}
+          <a 
+            href="https://unclesmol.github.io/dev-doc/" 
+            className="bottom-nav-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={resetNavigation}
+          >
+            <DevDocLogo className="w-24 h-auto" />
+          </a>
         </nav>
       </div>
     </header>

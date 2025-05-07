@@ -1,14 +1,26 @@
-import logo from './logo.svg';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Header from './components/Header';
 import Homepage from './components/Homepage/Homepage';
+import KnowUs from './components/KnowUs';
+import Connect from './components/Connect';
+import Events from './components/Events';
+import Dream from './components/Dream';
 
 function App() {
   return (
-    <div className="App">
-      <Header />
-      <Homepage/>
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <Header />
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/know-us" element={<KnowUs />} />
+          <Route path="/connect" element={<Connect />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/dream" element={<Dream />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
