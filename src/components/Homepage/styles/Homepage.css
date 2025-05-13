@@ -4,11 +4,12 @@
   background: var(--color-gray-900);
 }
 
-.hero {
+.hero-section {
   height: 100vh;
   position: relative;
   overflow: hidden;
   background: var(--gradient-primary);
+
 }
 
 .hero__image {
@@ -17,7 +18,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1;
+  z-index: -1; /* Ensure image is behind content */
+  overflow: hidden; /* Add this to clip the parallaxing image */
 }
 
 .hero__image img {
@@ -49,6 +51,7 @@
   text-align: center;
   padding: var(--spacing-xl);
   color: var(--color-white);
+  margin-top: 5rem;
 }
 
 .hero__content h1 {
@@ -84,21 +87,24 @@
 }
 
 .content-wrapper {
-  position: relative;
-  z-index: 1;
-  background: var(--color-gray-900);
-  padding: var(--spacing-2xl) var(--spacing-md);
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-top: var(--spacing-4xl); /* Vertical padding */
+  padding-bottom: var(--spacing-4xl); /* Vertical padding */
+  padding-left: var(--spacing-lg); /* Base horizontal padding for mobile */
+  padding-right: var(--spacing-lg); /* Base horizontal padding for mobile */
 }
 
 .featured {
   max-width: 1280px;
-  margin: 0 auto;
+  padding: var(--spacing-2xl);
 }
 
 .featured h2 {
   color: var(--color-white);
   font-size: var(--text-3xl);
   text-align: center;
+  margin-top: var(--spacing-xl);
   margin-bottom: var(--spacing-xl);
   font-weight: 700;
 }
@@ -116,7 +122,7 @@
   padding: var(--spacing-lg);
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-gray-700);
-  transition: var(--transition-normal);
+  /* transition: var(--transition-normal); Framer Motion will handle entry animation transitions */
   color: var(--color-white);
   opacity: 1;
   visibility: visible;
@@ -174,12 +180,20 @@
 }
 
 .about {
-  padding: var(--spacing-2xl) 0;
+  padding-bottom: var(--spacing-2xl);
   background: var(--glass-primary);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  margin: var(--spacing-2xl) 0;
+  -webkit-border-radius: var(--radius-lg);
+  -moz-border-radius: var(--radius-lg);
+  -ms-border-radius: var(--radius-lg);
+  -o-border-radius: var(--radius-lg);
   border-radius: var(--radius-lg);
+}
+
+.about h2{
+  margin-bottom: 0;
+  padding-bottom: var(--spacing-xl);
 }
 
 .about__content {
@@ -197,7 +211,12 @@
 }
 
 .latest {
-  padding: var(--spacing-2xl) 0;
+  max-width: 1280px;
+  padding: var(--spacing-2xl);
+}
+
+.latest h2{
+  margin-bottom: 0;
 }
 
 .latest__grid {
@@ -211,7 +230,7 @@
   border-radius: var(--radius-lg);
   padding: var(--spacing-lg);
   border: 1px solid var(--color-gray-800);
-  transition: var(--transition-normal);
+  /* transition: var(--transition-normal); Framer Motion will handle entry animation transitions */
 }
 
 .latest__card:hover {
@@ -220,19 +239,24 @@
   background: var(--glass-primary);
 }
 
-.community {
-  padding: var(--spacing-2xl) 0;
-  background: var(--overlay-primary);
+.community{
+  max-width: 1280px;
+  padding: var(--spacing-2xl);
+}
+
+.community, a {
+  
   border-radius: var(--radius-lg);
   opacity: 1;
+  text-decoration: none;
 }
 
 .community__content {
   display: grid;
   gap: var(--spacing-2xl);
   max-width: 1280px;
+  width: auto;
   margin: 0 auto;
-  padding: 0 var(--spacing-xl);
 }
 
 .community__description {
@@ -370,10 +394,11 @@
   border: 1px solid var(--color-gray-700);
 }
 
-.newsletter h3 {
+.newsletter h3, .community__events h3 {
   margin-bottom: var(--spacing-lg);
   font-size: var(--text-xl);
   color: var(--color-white);
+  text-align: center;
 }
 
 .newsletter__description {
@@ -408,6 +433,7 @@
 
 .newsletter__form input::placeholder {
   color: var(--color-gray-400);
+  font-size: var(--text-xs);
 }
 
 .newsletter__form button {
@@ -437,7 +463,12 @@
   font-weight: bold;
 }
 
+/* Mobile Screens 767px down */
 @media screen and (max-width: 767px) {
+  .featured, .latest, .community, .newsletter {
+    padding: var(--spacing-md);
+  }
+  
   .latest__grid {
     grid-template-columns: 1fr;
   }
@@ -474,6 +505,10 @@
 
 /* Tablet (768px - 1023px) */
 @media screen and (min-width: 768px) {
+  .content-wrapper {
+    padding-left: var(--spacing-xl); /* Increased horizontal padding for tablet */
+    padding-right: var(--spacing-xl); /* Increased horizontal padding for tablet */
+  }
   .latest__grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -498,6 +533,10 @@
 
 /* Desktop (1024px and up) */
 @media screen and (min-width: 1024px) {
+  .content-wrapper {
+    padding-left: var(--spacing-2xl); /* Further increased horizontal padding for desktop */
+    padding-right: var(--spacing-2xl); /* Further increased horizontal padding for desktop */
+  }
   .featured__grid {
     grid-template-columns: repeat(3, 1fr);
   }

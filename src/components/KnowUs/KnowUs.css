@@ -37,7 +37,7 @@
 .content-wrapper {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 var(--spacing-md);
+  padding: var(--spacing-4xl) var(--spacing-xl);
 }
 
 .story-section,
@@ -144,7 +144,11 @@
   width: 100%;
   height: 100%;
   background: var(--gradient-secondary);
-  border-radius: 50%;
+  -webkit-border-radius: var(--spacing-md);
+  -moz-border-radius: var(--spacing-md);
+  -ms-border-radius: var(--spacing-md);
+  -o-border-radius: var(--spacing-md);
+  border-radius: var(--spacing-md);
 }
 
 .team-card h3 {

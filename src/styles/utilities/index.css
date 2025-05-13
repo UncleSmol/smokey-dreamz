@@ -67,6 +67,7 @@
 .text-2xl { font-size: var(--text-2xl); }
 .text-3xl { font-size: var(--text-3xl); }
 .text-4xl { font-size: var(--text-4xl); }
+.text-placeholder { font-size: var(--text-placeholderr);}
 
 /* Color Utilities */
 .bg-primary { background-color: var(--color-primary); }

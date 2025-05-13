@@ -196,6 +196,7 @@
 .social-icon {
   font-size: 2rem;
   margin-bottom: var(--spacing-md);
+  fill: var(--color-accent);
 }
 
 .social-card h3 {
@@ -207,25 +208,66 @@
   color: var(--color-gray-300);
 }
 
-.instagram:hover { border-color: #E1306C; }
-.twitter:hover { border-color: #1DA1F2; }
-.whatsapp:hover { border-color: #25D366; }
-.discord:hover { border-color: #7289DA; }
-.telegram:hover { border-color: #0088cc; }
+
+.instagram:hover .social-icon {
+  fill: #E1306C;
+  -webkit-transition: fill .3s ease-in-out;
+  -moz-transition: fill .3s ease-in-out;
+  -ms-transition: fill .3s ease-in-out;
+  -o-transition: fill .3s ease-in-out;
+  transition: fill .3s ease-in-out;
+} 
+
+.twitter:hover .social-icon {
+  fill: #1DA1F2;
+  -webkit-transition:fill .3s ease-in-out ;
+  -moz-transition:fill .3s ease-in-out ;
+  -ms-transition:fill .3s ease-in-out ;
+  -o-transition:fill .3s ease-in-out ;
+  transition: fill .3s ease-in-out;
+}
+
+.whatsapp:hover .social-icon {
+  fill: #25D366;
+  -webkit-transition:fill .3s ease-in-out ;
+  -moz-transition:fill .3s ease-in-out ;
+  -ms-transition:fill .3s ease-in-out ;
+  -o-transition:fill .3s ease-in-out ;
+  transition: fill .3s ease-in-out;
+}
+
+.discord:hover .social-icon {
+  fill: #7289DA;
+  -webkit-transition:fill .3s ease-in-out ;
+  -moz-transition:fill .3s ease-in-out ;
+  -ms-transition:fill .3s ease-in-out ;
+  -o-transition:fill .3s ease-in-out ;
+  transition: fill .3s ease-in-out;
+}
+
+.telegram:hover .social-icon {
+  fill: #0088cc;
+  -webkit-transition:fill .3s ease-in-out ;
+  -moz-transition:fill .3s ease-in-out ;
+  -ms-transition:fill .3s ease-in-out ;
+  -o-transition:fill .3s ease-in-out ;
+  transition: fill .3s ease-in-out;
+}
 
 @media screen and (min-width: 768px) {
   .connect-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap:var(--spacing-lg);
   }
 }
 
 @media screen and (min-width: 1024px) {
   .content-wrapper {
-    padding: var(--spacing-6xl) var(--spacing-2xl);
+    padding:  var(--spacing-2xl);
   }
 
   .connect-grid {
-    gap: var(--spacing-6xl);
+    gap: var(--spacing-4xl);
   }
 
   .contact-info,
@@ -236,9 +278,7 @@
 }
 
 @media screen and (max-width: 767px) {
-  .content-wrapper {
-    padding: var(--spacing-2xl) var(--spacing-md);
-  }
+  
 
   .connect-grid {
     gap: var(--spacing-2xl);

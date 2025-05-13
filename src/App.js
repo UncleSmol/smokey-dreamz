@@ -8,8 +8,12 @@ import Events from './components/Events';
 import Dream from './components/Dream';
 
 function App() {
+  // Set basename based on environment
+  // In development, serve from root. In production, use the subdirectory.
+  const basename = process.env.NODE_ENV === 'production' ? '/smokey-dreamz' : '/';
+
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <div className="App">
         <Header />
         <Routes>

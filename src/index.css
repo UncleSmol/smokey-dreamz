@@ -57,6 +57,7 @@
   --font-mono: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
   
   /* Font Sizes - Mobile First */
+
   --text-xs: 0.75rem;    /* 12px */
   --text-sm: 0.875rem;   /* 14px */
   --text-base: 1rem;     /* 16px */
@@ -118,7 +119,8 @@ body {
   background-color: var(--color-gray-100);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  height: 100dvh ;
+  height: 100dvh !important;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 /* Mobile-First Media Queries */

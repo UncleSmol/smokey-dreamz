@@ -8,79 +8,70 @@ import './styles/Homepage.css';
 gsap.registerPlugin(ScrollTrigger);
 
 const Homepage = () => {
+  const homepageRef = useRef(null); // Ref for the main component div
   const heroRef = useRef(null);
-  const contentRef = useRef(null);
+  // const contentRef = useRef(null); // This ref was not used in the useEffect
 
   useEffect(() => {
-    gsap.set(['.featured', '.about', '.latest', '.community'], { 
-      opacity: 0,
-      y: 50
-    });
-    
-    const heroTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: heroRef.current,
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 1
-      }
-    });
-
-    heroTl.to(heroRef.current, {
-      yPercent: 30,
-      ease: 'none'
-    });
-
-    gsap.to('.featured', {
-      scrollTrigger: {
-        trigger: '.featured',
-        start: 'top bottom-=100',
-        end: 'top center',
-        toggleActions: 'play none none reverse'
-      },
-      y: 0,
-      opacity: 1,
-      duration: 1,
-      ease: 'power3.out'
-    });
-
-    const cards = gsap.utils.toArray('.featured__card');
-    gsap.to(cards, {
-      scrollTrigger: {
-        trigger: '.featured__grid',
-        start: 'top bottom-=100',
-        toggleActions: 'play none none reverse'
-      },
-      y: 0,
-      opacity: 1,
-      duration: 0.8,
-      stagger: 0.2,
-      ease: 'power3.out'
-    });
-
-    const sections = ['.about', '.latest', '.community'];
-    sections.forEach(section => {
-      gsap.to(section, {
-        scrollTrigger: {
-          trigger: section,
-          start: 'top bottom-=100',
-          toggleActions: 'play none none reverse'
-        },
-        y: 0,
-        opacity: 1,
-        duration: 1,
-        ease: 'power3.out'
+    // Scope GSAP animations to this component instance
+    // All selectors will be found within homepageRef.current
+    const ctx = gsap.context(() => {
+      // Initial hide for sections that will be animated in on scroll
+      gsap.set(['.featured', '.about', '.latest', '.community'], { 
+        opacity: 0,
+        y: 50
       });
-    });
+      
+      // Hero parallax animation
+      const heroImageEl = heroRef.current ? heroRef.current.querySelector('.hero__image img') : null;
+      if (heroImageEl) {
+        gsap.to(heroImageEl, { // Target only the image for parallax
+          yPercent: -25, // Move image upwards as user scrolls down
+          ease: 'none',
+          scrollTrigger: {
+            trigger: heroRef.current, // Trigger is the hero section
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true // Smooth scrubbing
+          }
+        });
+      }
+
+      // Animate other sections and cards into view
+      const sectionsAndCardsConfig = [
+        { selector: '.featured', duration: 1 },
+        { selector: '.featured__card', duration: 0.8, stagger: 0.2, trigger: '.featured__grid' },
+        { selector: '.about', duration: 1 },
+        { selector: '.latest', duration: 1 },
+        { selector: '.community', duration: 1 }
+      ];
+
+      sectionsAndCardsConfig.forEach(config => {
+        // GSAP will find elements matching config.selector within homepageRef.current
+        gsap.to(config.selector, {
+          opacity: 1,
+          y: 0,
+          duration: config.duration,
+          ease: 'power3.out',
+          stagger: config.stagger || 0,
+          scrollTrigger: {
+            trigger: config.trigger || config.selector, // Use specific trigger or the selector itself
+            start: 'top bottom-=100',
+            toggleActions: 'play none none reverse',
+          }
+        });
+      });
+
+    }, homepageRef); // Scope the context to the main homepage div
 
     return () => {
-      ScrollTrigger.getAll().forEach(t => t.kill());
+      ctx.revert(); // Cleanup GSAP animations and ScrollTriggers
     };
   }, []);
 
   return (
-    <div className="homepage">
-      <section className="hero" ref={heroRef}>
+    <div className="homepage" ref={homepageRef}> {/* Add ref here */}
+      <section className="hero-section" ref={heroRef}>
         <div className="hero__image">
           <img src={heroImage} alt="Smokey Dreamz Premium Cannabis" />
         </div>
@@ -91,7 +82,7 @@ const Homepage = () => {
         </div>
       </section>
 
-      <div className="content-wrapper" ref={contentRef}>
+      <div className="content-wrapper"> {/* Removed unused contentRef */}
         <section className="featured">
           <h2>Featured Collections</h2>
           <div className="featured__grid">

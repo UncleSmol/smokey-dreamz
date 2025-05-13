@@ -1,190 +1,247 @@
-import React, { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useAnimation, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ReactComponent as DevDocLogo } from '../../sig/dev-doc-logo.svg';
 import './Header.css';
+import { popUpWithBounce, generalExit } from '../../utils/animations/motionVariants';
 
-gsap.registerPlugin(ScrollTrigger);
+const MotionDevDocLogo = motion(DevDocLogo);
+const MotionLink = motion(Link);
 
 const Header = () => {
   const headerRef = useRef(null);
-  const logoRef = useRef(null);
-  const menuRef = useRef(null);
-  const navRef = useRef(null);
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const firstRender = useRef(true);
+
+  const logoControls = useAnimation();
+  const navControls = useAnimation();
+  const menuButtonControls = useAnimation();
 
   const menuItems = [
-    { path: '/', label: 'Home' },
-    { path: '/Dream', label: 'The Dream' },
-    { path: '/know-us', label: 'Know Us' },
-    { path: '/connect', label: 'Connect' },
-    { path: '/events', label: 'Events' },
+    { path: '/', label: 'HOME' },
+    { path: '/Dream', label: 'THE DREAM' },
+    { path: '/know-us', label: 'KNOW US' },
+    { path: '/connect', label: 'CONNECT' },
+    { path: '/events', label: 'EVENTS' },
   ];
 
-  useEffect(() => {
-    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-    
-    tl.fromTo(logoRef.current,
-      { y: -50, opacity: 0 },
-      { y: 0, opacity: 1, duration: 1 }
-    );
+  // Scroll animation for header
+  const { scrollY } = useScroll();
+  const headerY = useTransform(scrollY, [0, 100], [0, -50], { clamp: false });
 
-    const navItems = document.querySelectorAll('.nav-item');
-    tl.fromTo(navItems,
-      { y: -20, opacity: 0 },
-      { 
-        y: 0, 
-        opacity: 1, 
-        duration: 0.8, 
-        stagger: 0.1,
+  // Animation Variants
+  // Logo uses popUpWithBounce directly for its initial appearance
+  const logoVariants = {
+    initial: popUpWithBounce.initial,
+    animate: popUpWithBounce.animate,
+  };
+
+  const menuButtonVariants = {
+    initial: popUpWithBounce.initial,
+    animate: {
+      ...popUpWithBounce.animate,
+      transition: {
+        ...popUpWithBounce.animate.transition,
+        delay: 0.2, // Slight delay after the logo starts animating
       },
-      '-=0.5'
-    );
+    },
+  };
 
-    ScrollTrigger.create({
-      trigger: headerRef.current,
-      start: 'top top',
-      end: '100px',
-      scrub: true,
-      onUpdate: (self) => {
-        gsap.to(headerRef.current, {
-          y: self.progress * -50,
-          duration: 0.1
-        });
+  const navContainerVariants = {
+    initial: {}, // Base state for the container
+    desktopVisible: {
+      opacity: 1, // Explicitly set opacity for the container on desktop
+      height: 'auto', // Ensure height is auto for desktop layout
+      transition: {
+        staggerChildren: 0.07, // Time between each desktop nav item starting its animation
+        delayChildren: 0.3,   // Delay before the *first* desktop nav item starts, after navControls.start()
       }
-    });
-
-    // Add logo bounce animation
-    const logo = document.querySelector('.bottom-nav-link svg');
-    
-    const animateLogo = () => {
-      logo.style.animationPlayState = 'running';
-      setTimeout(() => {
-        logo.style.animationPlayState = 'paused';
-      }, 2000);
-    };
-
-    // Initial animation
-    animateLogo();
-    
-    // Set interval for repeated animation
-    const intervalId = setInterval(animateLogo, 10000);
-
-    // Cleanup
-    return () => clearInterval(intervalId);
-  }, []);
-
-  const toggleMenu = () => {
-    const nav = navRef.current;
-    const navItems = nav.querySelectorAll('.nav-item, .bottom-nav-link'); // Added logo selector
-    
-    if (isMenuOpen) {
-      const tl = gsap.timeline({
-        onComplete: () => setIsMenuOpen(false)
-      });
-
-      tl.to(navItems, {
-        y: -20,
-        opacity: 0,
-        duration: 0.3,
-        stagger: 0.05
-      })
-      .to(nav, {
-        height: 0,
-        opacity: 0,
+    },
+    mobileOpen: {
+      opacity: 1,
+      height: "calc(100dvh - 5rem)",
+      transition: {
         duration: 0.4,
-        ease: "power2.inOut"
-      });
-    } else {
-      const tl = gsap.timeline({
-        onStart: () => setIsMenuOpen(true)
-      });
-
-      tl.to(nav, {
-        height: "100vh",
-        opacity: 1,
-        duration: 0.4,
-        ease: "power2.inOut"
-      })
-      .fromTo(navItems,
-        { y: -20, opacity: 0 },
-        { 
-          y: 0,
-          opacity: 1,
-          duration: 0.3,
-          stagger: 0.05
-        },
-        "-=0.1"
-      );
+        ease: "easeOut",
+        when: "beforeChildren", // Ensure container animates before children
+        staggerChildren: 0.05, // Time between each mobile nav item starting
+        delayChildren: 0.1    // Delay before the *first* mobile nav item starts animating in
+      }
+    },
+    mobileClosed: {
+      opacity: 0,
+      height: 0,
+      transition: {
+        // Delay the container's own opacity/height animation slightly
+        // to give children a moment to start their exit.
+        opacity: { duration: 0.2, ease: "easeIn", delay: 0.1 }, 
+        height: { duration: 0.3, ease: "easeIn", delay: 0.1 },
+        when: "afterChildren", // Ensure children animate out before container
+        staggerChildren: 0.05, 
+        staggerDirection: -1,
+        // delayChildren: 0.05 // Optional: delay before the first child starts exiting
+                               // This can sometimes help if stagger alone isn't enough.
+      }
     }
   };
 
-  const resetNavigation = () => {
-    if (isMenuOpen) {
-      const nav = navRef.current;
-      const navItems = nav.querySelectorAll('.nav-item, .bottom-nav-link');
-      
-      const tl = gsap.timeline({
-        onComplete: () => setIsMenuOpen(false)
-      });
-
-      tl.to(navItems, {
-        y: -20,
-        opacity: 0,
-        duration: 0.3,
-        stagger: 0.05
-      })
-      .to(nav, {
-        height: 0,
-        opacity: 0,
-        duration: 0.4,
-        ease: "power2.inOut"
-      });
+  // Nav items use popUpWithBounce for their appearance, with specific variants for context
+  const navItemVariants = {
+    initial: popUpWithBounce.initial, // Default hidden state before any animation
+    desktopVisible: { // For desktop nav items, using the popUpWithBounce animation
+      ...popUpWithBounce.animate, // Inherits spring transition from popUpWithBounce
+    },
+    mobileOpen: { // For mobile nav items when menu opens, using popUpWithBounce
+      ...popUpWithBounce.animate, // Inherits spring transition
+    },
+    mobileClosed: { // For mobile nav items when menu closes
+      ...generalExit // Use all properties from generalExit, including its transition object
     }
+  };
+
+  const devDocLogoLinkVariants = {
+    initial: popUpWithBounce.initial,
+    mobileOpen: { ...popUpWithBounce.animate },
+    mobileClosed: { ...generalExit }, // Use all properties from generalExit
+    // Ensure that if the parent nav is 'desktopVisible', this specific item remains hidden
+    desktopVisible: { ...popUpWithBounce.initial, transition: { duration: 0 } } 
+  };
+
+  const devDocLogoBounceVariants = {
+    bounce: {
+      y: [0, -5, 0, -3, 0],
+      transition: {
+        duration: 1.5,
+        ease: "easeInOut",
+        repeat: Infinity,
+        repeatType: "loop",
+        repeatDelay: 8.5
+      }
+    }
+  };
+
+  // Initial animation sequence
+  useEffect(() => {
+    const sequence = async () => {
+      // Start all animations, letting their defined delays/staggers control the timing
+      logoControls.start("animate"); 
+      menuButtonControls.start("animate"); // This variant has an internal delay: 0.2
+      
+      //innerWidth check is for initial load. CSS media queries handle responsive layout.
+      if (window.innerWidth < 768) { // Assuming 768px is the breakpoint for mobile nav behavior
+        // On mobile, ensure the nav starts in its "mobileClosed" state (container hidden, items hidden)
+        navControls.start("mobileClosed", { duration: 0.01 }); // Apply immediately
+      } else {
+        // On desktop, start the "desktopVisible" animation for nav items.
+        navControls.start("desktopVisible");
+      }
+    };
+    sequence();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [logoControls, navControls, menuButtonControls]);
+
+  // Handle menu toggle after initial render
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+
+    // Only apply mobile open/close logic if on a mobile-sized screen.
+    // This prevents isMenuOpen changes from affecting desktop navigation visibility.
+    if (window.innerWidth < 768) { 
+      if (isMenuOpen) {
+        navControls.start("mobileOpen");
+      } else {
+        navControls.start("mobileClosed");
+      }
+    }
+  }, [isMenuOpen, navControls]);
+  
+  // Handle window resize to ensure correct nav state
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        navControls.start("desktopVisible");
+        // Optionally, ensure the mobile menu is considered closed on desktop
+        // if the hamburger button itself should reset.
+        // setIsMenuOpen(false); // This would also hide the 'X' on the hamburger
+      } else {
+        // Mobile view: rely on isMenuOpen to set the correct state
+        if (isMenuOpen) {
+          navControls.start("mobileOpen");
+        } else {
+          navControls.start("mobileClosed", { duration: 0.01 }); // Ensure it's quickly closed if not open
+        }
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [navControls, isMenuOpen]); // isMenuOpen is a dependency to re-evaluate mobile state on resize
+
+  const handleNavItemClick = () => {
+    setIsMenuOpen(false);
   };
 
   return (
-    <header className="header" ref={headerRef}>
+    <motion.header className="header" ref={headerRef} style={{ y: headerY }}>
       <div className="header__container">
-        <div ref={logoRef} className="header__logo">
+        <motion.div
+          className="header__logo"
+          variants={logoVariants}
+          initial="initial" // Use the "initial" key from logoVariants
+          animate={logoControls}
+        >
           <h1>SMOKEY DREAMZ</h1>
-        </div>
+        </motion.div>
 
-        <button 
-          ref={menuRef} 
+        <motion.button
           className={`header__menu-btn ${isMenuOpen ? 'active' : ''}`}
-          onClick={toggleMenu}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="Toggle menu"
+          variants={menuButtonVariants}
+          initial="initial"
+          animate={menuButtonControls}
         >
           <span></span>
           <span></span>
           <span></span>
-        </button>
+        </motion.button>
 
-        <nav className={`header__nav ${isMenuOpen ? 'active' : ''}`} ref={navRef}>
-          {menuItems.map((item) => (
-            <Link 
+        <motion.nav
+          className={`header__nav ${isMenuOpen ? 'active' : ''}`}
+          variants={navContainerVariants}
+          // The 'initial' variant for the container itself.
+          // For desktop, CSS handles visibility. For mobile, 'mobileClosed' will set initial opacity/height.
+          initial="initial" 
+          animate={navControls}
+        >
+          {menuItems.map((item, index) => (
+            <MotionLink // Use the new MotionLink component
               key={item.path} 
               to={item.path} 
               className="nav-item"
-              onClick={resetNavigation}
+              onClick={handleNavItemClick}
+              variants={navItemVariants}
+              // By removing 'initial', these items will now more directly inherit their
+              // animation state and timing (including stagger) from the parent motion.nav, similar to the bottom-nav-link.
             >
               {item.label}
-            </Link>
+            </MotionLink>
           ))}
-          <a 
+          <motion.a 
             href="https://unclesmol.github.io/dev-doc/" 
             className="bottom-nav-link"
             target="_blank"
             rel="noopener noreferrer"
-            onClick={resetNavigation}
+            onClick={handleNavItemClick}
+            variants={devDocLogoLinkVariants} // Use specific variants for the DevDoc logo link
           >
-            <DevDocLogo className="w-24 h-auto" />
-          </a>
-        </nav>
+              <MotionDevDocLogo className="w-24 h-auto" variants={devDocLogoBounceVariants} animate="bounce" />
+          </motion.a>
+        </motion.nav>
       </div>
-    </header>
+    </motion.header>
   );
 };
 

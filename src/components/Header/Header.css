@@ -22,6 +22,10 @@
   box-sizing: border-box;
 }
 
+.header__logo {
+  cursor: pointer;
+}
+
 .header__logo h1 {
   font-size: clamp(1.25rem, 4vw, var(--text-2xl));
   font-weight: 700;
@@ -31,7 +35,7 @@
 }
 
 .header__menu-btn {
-  display: none; 
+  display: none;
   flex-direction: column;
   gap: 6px;
   width: 30px;
@@ -57,6 +61,12 @@
 
 .header__menu-btn.active span:nth-child(2) {
   opacity: 0;
+  -webkit-transform: translateX(15px);
+  -moz-transform: translateX(15px);
+  -ms-transform: translateX(15px);
+  -o-transform: translateX(15px);
+  transform: translateX(15px);
+  transition: all 0.3s ease;
 }
 
 .header__menu-btn.active span:last-child {
@@ -82,7 +92,7 @@
 }
 
 .header__nav.active {
-  height: calc(100vh - 5rem);
+  height: calc(100dvh - 5rem);
   opacity: 1;
   padding: var(--spacing-xl) 0;
   visibility: visible;
@@ -95,8 +105,10 @@
   font-size: var(--text-xl);
   font-weight: 500;
   padding: var(--spacing-sm) var(--spacing-md);
-  transition: var(--transition-normal);
+  /* Removed 'transition: var(--transition-normal);' to prevent conflicts with Framer Motion.
+     Framer Motion handles opacity/transform. Specific CSS transitions (e.g., for color) can be added if needed. */
   position: relative;
+  background-color: transparent!important;
 }
 
 .nav-item::after {
@@ -121,13 +133,14 @@
 
 .bottom-nav-link{
   display: none;
+  background-color: transparent;
 }
 
 @media screen and (max-width: 767px) {
   .header__container {
     padding: 0 var(--spacing-md);
   }
-  
+
   .header__logo h1 {
     font-size: var(--text-lg);
   }
@@ -140,15 +153,14 @@
   .nav-logo {
     display: block;
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    left: var(--spacing-md);
     width: 150px;
     height: auto;
   }
 
   .bottom-nav-link{
+    margin-top: 20%;
     display: block;
-    margin-top: 200px;
   }
 }
 
@@ -164,7 +176,6 @@
   .header__nav {
     position: static;
     top: unset;
-    height: auto;
     width: auto;
     opacity: 1;
     background: transparent;
@@ -189,8 +200,7 @@
   }
 
   .header__nav {
-    position: static;
-    height: auto;
+    position: relative;
     width: auto;
     opacity: 1;
     background: transparent;
@@ -209,7 +219,7 @@
 }
 
 @media screen and (min-width: 1440px) {
-  
+
 
   .nav-item {
     font-size: var(--text-lg);
@@ -222,7 +232,7 @@
 
 .bottom-nav-link {
   position: relative;
-  opacity: 0.4;  
+  opacity: 0.4;
   transition: opacity 0.3s ease;
 }
 
@@ -239,26 +249,10 @@
   font-size: 0.75rem;
   color: var(--color-gray-100);
   white-space: nowrap;
-  opacity: 0.3;  
-}
-
-@keyframes subtle-bounce {
-  0%, 85%, 100% {
-    transform: translateY(0);
-  }
-  20%, 50% {
-    transform: translateY(-5px);
-  }
-  35%, 65% {
-    transform: translateY(-3px);
-  }
+  opacity: 0.3;
 }
 
 .bottom-nav-link svg {
-  animation: subtle-bounce 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  animation-play-state: paused;
-}
-
-.bottom-nav-link svg:hover {
-  animation: none;
+  width: 80px;
+  opacity: .4;
 }
