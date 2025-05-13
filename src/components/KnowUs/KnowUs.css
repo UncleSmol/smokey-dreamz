@@ -37,18 +37,21 @@
 .content-wrapper {
   max-width: 1280px;
   margin: 0 auto;
-  padding: var(--spacing-4xl) var(--spacing-xl);
+  padding-top: var(--spacing-4xl);
+  padding-bottom: var(--spacing-4xl);
+  padding-left: var(--spacing-lg); /* Base horizontal padding like Homepage */
+  padding-right: var(--spacing-lg); /* Base horizontal padding like Homepage */
 }
 
 .story-section,
-.values-section {
-  margin-bottom: var(--spacing-6xl);
-  padding: var(--spacing-2xl) 0;
-}
-
-.team-section {
-  margin-bottom: var(--spacing-4xl);
-  padding: var(--spacing-2xl) 0;
+.values-section, .team-section {
+  max-width: 1280px;
+  /* Removed horizontal margins, rely on content-wrapper */
+  margin-top: 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: var(--spacing-4xl); /* Vertical spacing between sections */
+  padding: var(--spacing-2xl); /* Internal padding for section content */
 }
 
 .story-content {
@@ -161,31 +164,56 @@
   color: var(--color-gray-300);
 }
 
+/* Mobile Screens (max-width: 767px) - Align with Homepage mobile section padding */
 @media screen and (max-width: 767px) {
+  .content-wrapper {
+    /* Horizontal padding is already var(--spacing-lg) from base, adjust if needed for mobile specifically */
+    /* For example, if Homepage uses --spacing-md on mobile for content-wrapper:
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+    */
+  }
   .story-content,
   .values-grid,
   .team-grid {
     grid-template-columns: 1fr;
   }
-  
   .hero-section {
     height: 50vh;
   }
+  .story-section,
+  .values-section,
+  .team-section {
+    padding: var(--spacing-md); /* Match Homepage mobile section padding */
+    margin-bottom: var(--spacing-2xl); /* Adjust vertical spacing for mobile if needed */
+  }
 }
 
+/* Tablet (min-width: 768px) - Align with Homepage tablet content-wrapper padding */
+@media screen and (min-width: 768px) {
+  .content-wrapper {
+    padding-left: var(--spacing-xl);
+    padding-right: var(--spacing-xl);
+  }
+}
+
+/* Desktop (min-width: 1024px) - Align with Homepage desktop styles */
 @media screen and (min-width: 1024px) {
   .content-wrapper {
-    padding: 0 var(--spacing-2xl);
+    padding-top: var(--spacing-4xl);    /* Ensure vertical padding is maintained */
+    padding-bottom: var(--spacing-4xl); /* Ensure vertical padding is maintained */
+    padding-left: var(--spacing-2xl);
+    padding-right: var(--spacing-2xl);
   }
 
   .story-section,
   .values-section {
-    margin-bottom: var(--spacing-8xl);
-    padding: var(--spacing-4xl) 0;
+    margin-bottom: var(--spacing-8xl); /* Keep larger vertical margin for desktop */
+    padding: var(--spacing-4xl) 0; /* Keep specific vertical padding, no horizontal for section content */
   }
 
   .team-section {
-    margin-bottom: var(--spacing-6xl);
-    padding: var(--spacing-4xl) 0;
+    margin-bottom: var(--spacing-6xl); /* Keep larger vertical margin for desktop */
+    padding: var(--spacing-4xl) 0; /* Keep specific vertical padding, no horizontal for section content */
   }
 }

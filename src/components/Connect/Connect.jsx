@@ -1,10 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { motion, useAnimation } from 'framer-motion'; // Import motion and useAnimation
 import { FaInstagram, FaTwitter, FaDiscord, FaTelegram, FaWhatsapp, FaMapMarkerAlt, FaPhone, FaEnvelope } from 'react-icons/fa';
 import './Connect.css';
-
-gsap.registerPlugin(ScrollTrigger);
+import { popUpWithBounce } from '../../utils/animations/motionVariants'; // Import your variant
 
 const Connect = () => {
   const [formData, setFormData] = useState({
@@ -15,6 +13,7 @@ const Connect = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const sectionRef = useRef(null);
+  const heroContentControls = useAnimation(); // Animation controls for hero content
 
   const SOCIAL_LINKS = {
     instagram: 'https://instagram.com/smokeydreamz',
@@ -43,45 +42,35 @@ const Connect = () => {
   };
 
   useEffect(() => {
-    gsap.set(['.contact-info', '.contact-form', '.social-connect'], {
-      opacity: 0,
-      y: 50
-    });
-
-    const sections = ['.contact-info', '.contact-form', '.social-connect'];
-    sections.forEach(section => {
-      gsap.to(section, {
-        scrollTrigger: {
-          trigger: section,
-          start: 'top bottom-=100',
-          toggleActions: 'play none none reverse'
-        },
-        y: 0,
-        opacity: 1,
-        duration: 1,
-        ease: 'power3.out'
-      });
-    });
-
-    return () => {
-      ScrollTrigger.getAll().forEach(t => t.kill());
-    };
-  }, []);
+    // Animate hero content on load
+    heroContentControls.start("animate");
+  }, [heroContentControls]);
 
   return (
     <div className="connect" ref={sectionRef}>
       <section className="hero-section">
         <div className="hero__image">
         </div>
-        <div className="hero-content">
+        <motion.div // Wrap hero content with motion.div
+          className="hero-content"
+          variants={popUpWithBounce}
+          initial="initial"
+          animate={heroContentControls}
+        >
           <h1>Connect With Us</h1>
           <p>Join the Smokey Dreamz community</p>
-        </div>
+        </motion.div>
       </section>
 
       <div className="content-wrapper">
         <div className="connect-grid">
-          <section className="contact-info">
+          <motion.section // Wrap section with motion.section
+            className="contact-info"
+            variants={popUpWithBounce}
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true, amount: 0.2 }}
+          >
             <h2>Get in Touch</h2>
             <div className="info-cards">
               <div className="info-card">
@@ -103,9 +92,15 @@ const Connect = () => {
                 <p>support@smokeydreamz.co.za</p>
               </div>
             </div>
-          </section>
+          </motion.section>
 
-          <section className="contact-form">
+          <motion.section // Wrap section with motion.section
+            className="contact-form"
+            variants={popUpWithBounce}
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true, amount: 0.2 }}
+          >
             <h2>Send a Message</h2>
             <form onSubmit={handleSubmit}>
               <div className="form-group">
@@ -155,10 +150,16 @@ const Connect = () => {
                 {isSubmitting ? 'Sending...' : 'Send Message'}
               </button>
             </form>
-          </section>
+          </motion.section>
         </div>
 
-        <section className="social-connect">
+        <motion.section // Wrap section with motion.section
+          className="social-connect"
+          variants={popUpWithBounce}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           <h2>Follow Our Journey</h2>
           <div className="social-grid">
             <a 
@@ -212,7 +213,7 @@ const Connect = () => {
               <p>Exclusive announcements</p>
             </a>
           </div>
-        </section>
+        </motion.section>
       </div>
     </div>
   );

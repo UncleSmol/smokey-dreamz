@@ -1,27 +1,23 @@
 import React, { useEffect, useRef } from 'react';
+import { motion, useAnimation } from 'framer-motion'; // Import motion and useAnimation
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import heroImage from '../../assets/images/smokey-dreamz-hero-img.webP';
 import { FaInstagram, FaTwitter, FaDiscord, FaTelegram, FaWhatsapp } from 'react-icons/fa';
 import './styles/Homepage.css';
+import { popUpWithBounce } from '../../utils/animations/motionVariants'; // Import your variant
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Homepage = () => {
   const homepageRef = useRef(null); // Ref for the main component div
   const heroRef = useRef(null);
-  // const contentRef = useRef(null); // This ref was not used in the useEffect
+  const heroContentControls = useAnimation(); // Animation controls for hero content
 
   useEffect(() => {
-    // Scope GSAP animations to this component instance
-    // All selectors will be found within homepageRef.current
+    heroContentControls.start("animate"); // Animate hero content on load
+
     const ctx = gsap.context(() => {
-      // Initial hide for sections that will be animated in on scroll
-      gsap.set(['.featured', '.about', '.latest', '.community'], { 
-        opacity: 0,
-        y: 50
-      });
-      
       // Hero parallax animation
       const heroImageEl = heroRef.current ? heroRef.current.querySelector('.hero__image img') : null;
       if (heroImageEl) {
@@ -36,38 +32,12 @@ const Homepage = () => {
           }
         });
       }
-
-      // Animate other sections and cards into view
-      const sectionsAndCardsConfig = [
-        { selector: '.featured', duration: 1 },
-        { selector: '.featured__card', duration: 0.8, stagger: 0.2, trigger: '.featured__grid' },
-        { selector: '.about', duration: 1 },
-        { selector: '.latest', duration: 1 },
-        { selector: '.community', duration: 1 }
-      ];
-
-      sectionsAndCardsConfig.forEach(config => {
-        // GSAP will find elements matching config.selector within homepageRef.current
-        gsap.to(config.selector, {
-          opacity: 1,
-          y: 0,
-          duration: config.duration,
-          ease: 'power3.out',
-          stagger: config.stagger || 0,
-          scrollTrigger: {
-            trigger: config.trigger || config.selector, // Use specific trigger or the selector itself
-            start: 'top bottom-=100',
-            toggleActions: 'play none none reverse',
-          }
-        });
-      });
-
     }, homepageRef); // Scope the context to the main homepage div
 
     return () => {
       ctx.revert(); // Cleanup GSAP animations and ScrollTriggers
     };
-  }, []);
+  }, [heroContentControls]); // Added heroContentControls to dependency array
 
   return (
     <div className="homepage" ref={homepageRef}> {/* Add ref here */}
@@ -75,50 +45,93 @@ const Homepage = () => {
         <div className="hero__image">
           <img src={heroImage} alt="Smokey Dreamz Premium Cannabis" />
         </div>
-        <div className="hero__content">
+        <motion.div
+          className="hero__content"
+          variants={popUpWithBounce}
+          initial="initial"
+          animate={heroContentControls}
+        >
           <h1>Premium Cannabis Culture</h1>
           <p>Witbank's Finest Cannabis Dispensary</p>
           <button className="cta-button">Explore Collection</button>
-        </div>
+        </motion.div>
       </section>
 
       <div className="content-wrapper"> {/* Removed unused contentRef */}
-        <section className="featured">
+        <motion.section
+          className="featured"
+          variants={popUpWithBounce}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           <h2>Featured Collections</h2>
           <div className="featured__grid">
             {['Premium Strains', 'Accessories', 'Merchandise'].map((category) => (
-              <div key={category} className="featured__card">
+              <motion.div
+                key={category}
+                className="featured__card"
+                variants={popUpWithBounce}
+                initial="initial"
+                whileInView="animate"
+                viewport={{ once: true, amount: 0.1 }} // Trigger a bit earlier for cards
+              >
                 <div className="card__content">
                   <h3>{category}</h3>
                   <p>Discover our selection of premium {category.toLowerCase()}</p>
                   <button className="button-secondary">View Collection</button>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </section>
+        </motion.section>
 
-        <section className="about">
+        <motion.section
+          className="about"
+          variants={popUpWithBounce}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           <h2>The Smokey Experience</h2>
           <div className="about__content">
             <p>Experience the finest cannabis products in Mpumalanga. We pride ourselves on quality, authenticity, and the true spirit of South African cannabis culture.</p>
             <button className="button-primary">Our Story</button>
           </div>
-        </section>
+        </motion.section>
 
-        <section className="latest">
+        <motion.section
+          className="latest"
+          variants={popUpWithBounce}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           <h2>Latest Drops</h2>
           <div className="latest__grid">
             {['New Arrivals', 'Limited Edition', 'Local Collabs'].map((item) => (
-              <div key={item} className="latest__card">
+              <motion.div
+                key={item}
+                className="latest__card"
+                variants={popUpWithBounce}
+                initial="initial"
+                whileInView="animate"
+                viewport={{ once: true, amount: 0.1 }} // Trigger a bit earlier for cards
+              >
                 <h3>{item}</h3>
                 <p>Explore our newest additions to the collection</p>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </section>
+        </motion.section>
 
-        <section className="community">
+        <motion.section
+          className="community"
+          variants={popUpWithBounce}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           <div className="community__content">
             <div className="community__social">
               <h2>Join Our Community</h2>
@@ -197,7 +210,7 @@ const Homepage = () => {
               </form>
             </div>
           </div>
-        </section>
+        </motion.section>
       </div>
     </div>
   );

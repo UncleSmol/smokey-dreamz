@@ -53,7 +53,10 @@
 .content-wrapper {
   max-width: 1280px;
   margin: 0 auto;
-  padding: var(--spacing-4xl) var(--spacing-xl);
+  padding-top: var(--spacing-4xl);    /* Consistent vertical padding */
+  padding-bottom: var(--spacing-4xl); /* Consistent vertical padding */
+  padding-left: var(--spacing-lg);   /* Base horizontal padding (mobile) */
+  padding-right: var(--spacing-lg);  /* Base horizontal padding (mobile) */
 }
 
 .connect-grid {
@@ -65,7 +68,8 @@
 .contact-info,
 .contact-form,
 .social-connect {
-  padding: var(--spacing-2xl) 0;
+  padding-top: var(--spacing-2xl);    /* Vertical padding for sections */
+  padding-bottom: var(--spacing-2xl); /* Vertical padding for sections */
 }
 
 .contact-info h2,
@@ -256,14 +260,20 @@
 
 @media screen and (min-width: 768px) {
   .connect-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr); /* Keep existing grid change */
     gap:var(--spacing-lg);
+  }
+  .content-wrapper {
+    padding-left: var(--spacing-xl);   /* Increased horizontal padding for tablet */
+    padding-right: var(--spacing-xl);  /* Increased horizontal padding for tablet */
   }
 }
 
 @media screen and (min-width: 1024px) {
   .content-wrapper {
-    padding:  var(--spacing-2xl);
+    /* Vertical padding is var(--spacing-4xl) from base */
+    padding-left: var(--spacing-2xl);   /* Further increased horizontal padding for desktop */
+    padding-right: var(--spacing-2xl);  /* Further increased horizontal padding for desktop */
   }
 
   .connect-grid {
@@ -273,7 +283,8 @@
   .contact-info,
   .contact-form,
   .social-connect {
-    padding: var(--spacing-4xl) 0;
+    padding-top: var(--spacing-4xl);    /* Increased vertical padding for sections on desktop */
+    padding-bottom: var(--spacing-4xl); /* Increased vertical padding for sections on desktop */
   }
 }
 
@@ -283,5 +294,10 @@
   .connect-grid {
     gap: var(--spacing-2xl);
     margin-bottom: var(--spacing-4xl);
+  }
+
+  .contact-info, .contact-form, .social-connect {
+    padding: var(--spacing-md);    /* Vertical padding for sections */
+     
   }
 }

@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { motion, useAnimation } from 'framer-motion'; // Import motion and useAnimation
 import { FaChevronDown } from 'react-icons/fa';
 import StrainCard from './StrainCard';
 import { strainData } from './strainData';
 import heroImage from '../../assets/images/smokey-dreamz-hero-img.webP';
 import './Dream.css';
+import { popUpWithBounce } from '../../utils/animations/motionVariants'; // Import your variant
 
-gsap.registerPlugin(ScrollTrigger);
 
 const categories = [
   {
@@ -40,6 +39,8 @@ const Dream = () => {
   const [activeCategory, setActiveCategory] = useState(null);
   const sectionRef = useRef(null);
   const scrollContainersRef = useRef({});
+  const heroContentControls = useAnimation(); // Animation controls for hero content
+  // We will use whileInView for category sections, so individual controls might not be needed for them.
 
   const handleCategoryClick = (categoryId) => {
     setActiveCategory(activeCategory === categoryId ? null : categoryId);
@@ -60,27 +61,9 @@ const Dream = () => {
   };
 
   useEffect(() => {
-    gsap.set('.strain-grid', {
-      opacity: 0,
-      y: 50
-    });
-
-    gsap.to('.strain-grid', {
-      scrollTrigger: {
-        trigger: '.strain-grid',
-        start: 'top bottom-=100',
-        toggleActions: 'play none none reverse'
-      },
-      y: 0,
-      opacity: 1,
-      duration: 1,
-      ease: 'power3.out'
-    });
-
-    return () => {
-      ScrollTrigger.getAll().forEach(t => t.kill());
-    };
-  }, []);
+    // Animate hero content on load
+    heroContentControls.start("animate");
+  }, [heroContentControls]);
 
   return (
     <div className="dream" ref={sectionRef}>
@@ -88,15 +71,27 @@ const Dream = () => {
         <div className="hero__image">
           <img src={heroImage} alt="Smokey Dreamz Collection" />
         </div>
-        <div className="hero-content">
+        <motion.div // Wrap hero content with motion.div
+          className="hero-content"
+          variants={popUpWithBounce}
+          initial="initial"
+          animate={heroContentControls}
+        >
           <h1>The Dream Collection</h1>
           <p>Premium Cannabis Products</p>
-        </div>
+        </motion.div>
       </section>
 
       <div className="content-wrapper">
         {categories.map((category) => (
-          <div key={category.id} className="category-section">
+          <motion.div // Wrap each category section with motion.div
+            key={category.id}
+            className="category-section"
+            variants={popUpWithBounce}
+            initial="initial"
+            whileInView="animate" // Animate when it comes into view
+            viewport={{ once: true, amount: 0.2 }} // Trigger once, when 20% is visible
+          >
             <button
               className={`category-header ${activeCategory === category.id ? 'active' : ''}`}
               onClick={() => handleCategoryClick(category.id)}
@@ -135,7 +130,7 @@ const Dream = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>

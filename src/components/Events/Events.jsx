@@ -1,39 +1,18 @@
 import React, { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { motion, useAnimation } from 'framer-motion'; // Import motion and useAnimation
 import heroImage from '../../assets/images/smokey-dreamz-hero-img.webP';
 import './Events.css';
+import { popUpWithBounce } from '../../utils/animations/motionVariants'; // Import your variant
 
-gsap.registerPlugin(ScrollTrigger);
 
 const Events = () => {
   const sectionRef = useRef(null);
+  const heroContentControls = useAnimation(); 
 
   useEffect(() => {
-    gsap.set(['.featured-events', '.upcoming-events', '.past-events'], {
-      opacity: 0,
-      y: 50
-    });
-
-    const sections = ['.featured-events', '.upcoming-events', '.past-events'];
-    sections.forEach(section => {
-      gsap.to(section, {
-        scrollTrigger: {
-          trigger: section,
-          start: 'top bottom-=100',
-          toggleActions: 'play none none reverse'
-        },
-        y: 0,
-        opacity: 1,
-        duration: 1,
-        ease: 'power3.out'
-      });
-    });
-
-    return () => {
-      ScrollTrigger.getAll().forEach(t => t.kill());
-    };
-  }, []);
+    // Animate hero content on load
+    heroContentControls.start('animate');
+  }, [heroContentControls]);
 
   const upcomingEvents = [
     {
@@ -65,14 +44,25 @@ const Events = () => {
         <div className="hero__image">
           <img src={heroImage} alt="Smokey Dreamz Events" />
         </div>
-        <div className="hero-content">
+        <motion.div // Wrap hero content with motion.div
+          className="hero-content"
+          variants={popUpWithBounce}
+          initial="initial"
+          animate={heroContentControls}
+        >
           <h1>Our Events</h1>
           <p>Join us in celebrating cannabis culture</p>
-        </div>
+        </motion.div>
       </section>
 
       <div className="content-wrapper">
-        <section className="featured-events">
+        <motion.section // Wrap section with motion.section
+          className="featured-events"
+          variants={popUpWithBounce}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           <h2>Featured Event</h2>
           <div className="featured-event-card">
             <div className="event-image">
@@ -95,9 +85,15 @@ const Events = () => {
               <button className="button-primary">RSVP Now</button>
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        <section className="upcoming-events">
+        <motion.section // Wrap section with motion.section
+          className="upcoming-events"
+          variants={popUpWithBounce}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           <h2>Upcoming Events</h2>
           <div className="events-grid">
             {upcomingEvents.map((event, index) => (
@@ -121,9 +117,15 @@ const Events = () => {
               </div>
             ))}
           </div>
-        </section>
+        </motion.section>
 
-        <section className="past-events">
+        <motion.section // Wrap section with motion.section
+          className="past-events"
+          variants={popUpWithBounce}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           <h2>Past Events Gallery</h2>
           <div className="gallery-grid">
             {[1, 2, 3, 4, 5, 6].map((item) => (
@@ -136,7 +138,7 @@ const Events = () => {
               </div>
             ))}
           </div>
-        </section>
+        </motion.section>
       </div>
     </div>
   );
