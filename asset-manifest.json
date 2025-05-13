@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/smokey-dreamz/static/css/main.ee62ebc7.css",
-    "main.js": "/smokey-dreamz/static/js/main.8f598b69.js",
+    "main.css": "/smokey-dreamz/static/css/main.8e9368fd.css",
+    "main.js": "/smokey-dreamz/static/js/main.ce6c15c5.js",
     "static/js/453.d0e0617d.chunk.js": "/smokey-dreamz/static/js/453.d0e0617d.chunk.js",
     "static/media/smokey-dreamz-hero-img.webP": "/smokey-dreamz/static/media/smokey-dreamz-hero-img.e2acc7926670338a50a3.webP",
     "static/media/dev-doc-logo.svg": "/smokey-dreamz/static/media/dev-doc-logo.de797792e2f0976ba27c3a47cbad631e.svg",
     "index.html": "/smokey-dreamz/index.html",
-    "main.ee62ebc7.css.map": "/smokey-dreamz/static/css/main.ee62ebc7.css.map",
-    "main.8f598b69.js.map": "/smokey-dreamz/static/js/main.8f598b69.js.map",
+    "main.8e9368fd.css.map": "/smokey-dreamz/static/css/main.8e9368fd.css.map",
+    "main.ce6c15c5.js.map": "/smokey-dreamz/static/js/main.ce6c15c5.js.map",
     "453.d0e0617d.chunk.js.map": "/smokey-dreamz/static/js/453.d0e0617d.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.ee62ebc7.css",
-    "static/js/main.8f598b69.js"
+    "static/css/main.8e9368fd.css",
+    "static/js/main.ce6c15c5.js"
   ]
 }
